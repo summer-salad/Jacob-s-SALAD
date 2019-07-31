@@ -43,7 +43,7 @@ class Circle:
         self.add = 0
 class ECircle:
     def __init__(self): #Setting up parameters for white dots/electrons
-        self.radius = 2
+        self.radius = 6
         done = True
         x = 0
        
@@ -55,8 +55,8 @@ class ECircle:
         #self.y = random.randint(52, 73) #100 in the rand int so ball doesnt get stuck in the red bar, making a shower of red balls
         self.x = random.randint(self.radius, 800-self.radius)
         self.y = random.randint(50+self.radius, 550-self.radius) 
-        self.speedx = 0.5*(random.random()+1.0)
-        self.speedy = 0.5*(random.random()+1.0)
+        self.speedx = 0.5*(random.random()+4.0)
+        self.speedy = 0.5*(random.random()+4.0)
     def drawE(self):
         #This draws the ECircles/electrons       
         pygame.draw.circle(Surface,white,(int(self.x),int(self.y)),self.radius) #draws individual blue circles
@@ -74,7 +74,7 @@ class Tcircle:
 for x in range(20):
     ECircles.append(ECircle())
 
-for x in range(10):
+for x in range(0):
     Circles.append(Circle())
 
 def main():
@@ -174,36 +174,38 @@ def Move(): #circles move
         ECircle.y = int(ECircle.y)
         ECircle.x = int(ECircle.x)
 
-        if ECircle.x in range(0,398): 
+        if ECircle.x in range(0,399): 
             if checkInArray(ECircle.y, ML):
                 #ECircle.speedx = 1
                 #ECircle.speedy = (ECircle.x-600)/math.sqrt(100^2-(ECircle.x-600)^2)  #(x-a)/sqrt(r^2-(x-a)^2)=(dy)/(dx)
-                if ECircle.x == 398:
-                    ECircle.x = 400
+                if ECircle.x >= 398:
+                    ECircle.x = 401
+                    print('qwertyu')
                 else:
                     ECircle.x += 1
                     ECircle.y = int(ML[ECircle.x])
             else:
-                print('qwertyu')
                 ECircle.x += ECircle.speedx
                 ECircle.y += ECircle.speedy
         
-        if ECircle.x in range(400,799):   
+        if ECircle.x in range(400,800):   
             if checkInArray(ECircle.y, MR):
             #ECircle.speedx = 1
                 #ECircle.speedy = (ECircle.x-600)/math.sqrt(100^2-(ECircle.x-600)^2)  #(x-a)/sqrt(r^2-(x-a)^2)=(dy)/(dx)
-                if ECircle.x == 799:
+                if ECircle.x >= 799:
                     ECircle.x = 0
+                    ECircle.y = ML[0]
                 else:
                     ECircle.x += 1
                     ECircle.y = int(MR[ECircle.x-400])
             else:
-                print('qwe')
                 ECircle.x += ECircle.speedx
                 ECircle.y += ECircle.speedy
-        if ECircle.x == 399 and (checkInArray(ECircle.y, ML)==False):
-            ECircle.x = 400
-            ECircle.y += ECircle.speedy
+        #if ECircle.x == 399 and ((checkInArray(ECircle.y, ML)==False) or (checkInArray(ECircle.y, MR)==False)) :
+        #    print('qwu')
+        #elif (ECircle.x in range(0,800)) and (ECircle.y in range(40,600)):
+        #    ECircle.x += ECircle.speedx
+        #    ECircle.y += ECircle.speedy
 
                       
         
@@ -300,7 +302,6 @@ def Draw():
         else:
             color = yellow
             
-        #print (color)
         pygame.draw.circle(Surface,color,(int(Circle.x),int(Circle.y)),Circle.radius) #draws individual blue circles
         factor = 0
 
