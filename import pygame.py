@@ -23,10 +23,10 @@ MR = []
 sqrt = math.sqrt
 
 for x in range(0,399): #This covers the x and y trajectory for the leftward magnetic field
-    HalfCircleYLeft = (math.sqrt(200**2-(int(x)-200)**2)+50)#(math.sqrt(500^2-(((x-200))^2)))+50
+    HalfCircleYLeft = int(math.sqrt(200**2-(int(x)-200)**2)+50)#(math.sqrt(500^2-(((x-200))^2)))+50
     ML.append(HalfCircleYLeft)
 for x in range(400,800):
-    HalfCircleY_Right = (math.sqrt(200**2-(int(x)-600)**2)+50)
+    HalfCircleY_Right = int(math.sqrt(200**2-(int(x)-600)**2)+50)
     MR.append(HalfCircleY_Right)
 
 
@@ -74,7 +74,7 @@ class Tcircle:
 for x in range(20):
     ECircles.append(ECircle())
 
-for x in range(20):
+for x in range(10):
     Circles.append(Circle())
 
 def main():
@@ -156,7 +156,7 @@ def CircleCollide(C1,C2): #interactions between blue balls
 def checkInArray(x,list):
     bol = False
     for y in list:
-        if x==y:
+        if x == y:
             bol = True
     return bol
 def Move(): #circles move
@@ -168,29 +168,45 @@ def Move(): #circles move
             factor = 0
         Circle.x += Circle.speedx
         Circle.y += Circle.speedy
-    for ECircle in ECircles:
 
-        if ECircle.x in range(0,399):    
-            if checkInArray(ECircle.y,ML):
-                for x in range(0,399):
+
+    for ECircle in ECircles:
+        ECircle.y = int(ECircle.y)
+        ECircle.x = int(ECircle.x)
+
+        if ECircle.x in range(0,398): 
+            if checkInArray(ECircle.y, ML):
                 #ECircle.speedx = 1
                 #ECircle.speedy = (ECircle.x-600)/math.sqrt(100^2-(ECircle.x-600)^2)  #(x-a)/sqrt(r^2-(x-a)^2)=(dy)/(dx)
-                    ECircle.x = int(x)
-                    ECircle.y = ML[x]
+                if ECircle.x == 398:
+                    ECircle.x = 400
+                else:
+                    ECircle.x += 1
+                    ECircle.y = int(ML[ECircle.x])
+            else:
+                print('qwertyu')
+                ECircle.x += ECircle.speedx
+                ECircle.y += ECircle.speedy
         
-        if ECircle.x in range(400,800):   
-            if checkInArray(ECircle.y,MR):
-                for x in range(400,800):
-                    #ECircle.speedx = 1
-                    #ECircle.speedy = (ECircle.x-600)/math.sqrt(100^2-(ECircle.x-600)^2)  #(x-a)/sqrt(r^2-(x-a)^2)=(dy)/(dx)
-                    #ECircle.x += ECircle.speedx
-                    #ECircle.y += ECircle.speedy
-                    ECircle.x = int(x)
-                    ECircle.y = MR[(x-400)] 
-                    break 
-        else:
-            ECircle.x += ECircle.speedx
+        if ECircle.x in range(400,799):   
+            if checkInArray(ECircle.y, MR):
+            #ECircle.speedx = 1
+                #ECircle.speedy = (ECircle.x-600)/math.sqrt(100^2-(ECircle.x-600)^2)  #(x-a)/sqrt(r^2-(x-a)^2)=(dy)/(dx)
+                if ECircle.x == 799:
+                    ECircle.x = 0
+                else:
+                    ECircle.x += 1
+                    ECircle.y = int(MR[ECircle.x-400])
+            else:
+                print('qwe')
+                ECircle.x += ECircle.speedx
+                ECircle.y += ECircle.speedy
+        if ECircle.x == 399 and (checkInArray(ECircle.y, ML)==False):
+            ECircle.x = 400
             ECircle.y += ECircle.speedy
+
+                      
+        
 
     for Tcircle in Tcircles: #Red circles stop when they hit the green target
         Tcircle.y += Tcircle.speedy
@@ -224,7 +240,7 @@ def CollisionDetect(): #turns balls around
             ECircle.speedy *= -1
         if ECircle.y > 550-ECircle.radius:
             ECircle.speedy *= -1
-   
+
     for Circle in Circles:
         for Circle2 in Circles:
             if Circle != Circle2:
@@ -236,14 +252,13 @@ def CollisionDetect(): #turns balls around
                     if math.sqrt(((Circle.x-Circle2.x)**2)+((Circle.y-Circle2.y)**2)) <= (Circle.radius+Circle2.radius):
                             CircleCollide(Circle,Circle2)
     
-    
-    
-    for ECircle in ECircles:     
-        for ECircle2 in ECircles:
+      
+    #for ECircle in ECircles:     
+     #   for ECircle2 in ECircles:
 
-            if ECircle != ECircle2:
-                if math.sqrt(((ECircle.x-ECircle2.x)**2)+((ECircle.y-ECircle2.y)**2)) <= (ECircle.radius+ECircle2.radius):
-                    CircleCollide(ECircle,ECircle2)
+      #      if ECircle != ECircle2:
+       #         if math.sqrt(((ECircle.x-ECircle2.x)**2)+((ECircle.y-ECircle2.y)**2)) <= (ECircle.radius+ECircle2.radius):
+        #            CircleCollide(ECircle,ECircle2)
     
     for Circle in Circles:
         for ECircle in ECircles:
@@ -271,9 +286,9 @@ def Draw():
     #pygame.draw.rect(Surface, green, (100,50, 200, 75)) #draws yellow bar
     #pygame.draw.rect(Surface, green, (500,50, 200, 75)) #draws yellow bar
     for x in range(0,398):
-        pygame.draw.line(Surface,white,(x, ML[x]), (x+1, ML[x+1]), 3)
+        pygame.draw.line(Surface,white,(x, ML[x]), (x+1, ML[x+1]), 1)
     for x in range(400,799):
-        pygame.draw.line(Surface,white,(x, MR[(x-400)]), (x+1, MR[(x-400)+1]), 3)
+        pygame.draw.line(Surface,white,(x, MR[(x-400)]), (x+1, MR[(x-400)+1]), 1)
 
     for Circle in Circles:
         if Circle.numCol % 2 == 0:
